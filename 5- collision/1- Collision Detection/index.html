@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Collision</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas></canvas>
+
+    <script>
+      let canvas = document.querySelector("canvas");
+      let ctx = canvas.getContext("2d");
+
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+
+      let mouse = {
+        x: innerWidth / 2,
+        y: innerHeight / 2,
+      };
+
+      //update mouse object coord when the mouse moves
+      document.addEventListener("mousemove", function (e) {
+        mouse.x = e.pageX;
+        mouse.y = e.pageY;
+      });
+
+      document.addEventListener("resize", function () {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+      });
+
+      //Circle Class
+      function Circle(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+
+        this.update = function () {
+          this.draw();
+        };
+
+        this.draw = function () {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        };
+
+        //To get the distance between the 2 circles' origins
+        this.getDistance = function (x1, y1, x2, y2) {
+          let xDistance = x1 - x2;
+          let yDistance = y1 - y2;
+
+          //Pythagoras Rule (like the Hypotenuse of triangle with a right angle)
+          return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+        };
+      }
+
+      let circle1, circle2;
+
+      function init() {
+        circle1 = new Circle(600, 300, 50, "black");
+
+        circle2 = new Circle(undefined, undefined, 30, "red");
+      }
+      init();
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        circle1.update();
+
+        circle2.x = mouse.x;
+        circle2.y = mouse.y;
+
+        //redraw the circle with the new position
+        circle2.update();
+
+        let distance = circle2.getDistance(circle1.x, circle1.y, circle2.x, circle2.y);
+
+        console.log(distance, circle1.radius + circle2.radius);
+
+        //checking collision
+        if (distance <= circle1.radius + circle2.radius) {
+          circle2.color = "black";
+        } else {
+          circle2.color = "red";
+        }
+      }
+      animate();
+    </script>
+  </body>
+</html>

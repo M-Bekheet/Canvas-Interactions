@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+
+    <script>
+      let canvas = document.querySelector("canvas");
+      let c = canvas.getContext("2d");
+
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+
+      const mouse = {
+        x: undefined,
+        y: undefined,
+      };
+
+      let maxRadius = 80,
+        colorsArr = ["#2196f3", "#f44336", "#ddd", "#2196E4", "#ffc107"];
+
+      window.addEventListener("mousemove", function (e) {
+        mouse.x = e.x;
+        mouse.y = e.y;
+      });
+
+      window.addEventListener("resize", () => {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+        init();
+      });
+
+      function Circle(x, y, dx, dy, radius) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.radius = radius;
+        this.minRadius = radius;
+        this.color = colorsArr[Math.floor(Math.random() * colorsArr.length)];
+
+        const self = this;
+
+        this.draw = function () {
+          c.beginPath();
+          c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+          // c.strokeStyle = 'blue' //this.color;
+          c.stroke();
+          c.fillStyle = this.color;
+          c.fill();
+        };
+
+        //update the direction of the circle when it hits the sides
+        this.update = function () {
+          //change the speed direction when the circle hits right or left border
+          if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
+            this.dx = -this.dx;
+          }
+          //change the speed direction when the circle hits top or bottom border
+          if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
+            this.dy = -this.dy;
+          }
+
+          //update position
+          this.x += this.dx;
+          this.y += this.dy;
+
+          // Interactivity
+          if (Math.abs(mouse.x - this.x) < 50 && Math.abs(mouse.y - this.y) < 50) {
+            if (this.radius < maxRadius) {
+              this.radius++;
+            }
+          } else {
+            this.radius > this.minRadius ? this.radius-- : this.radius;
+          }
+
+          this.draw();
+        };
+      }
+
+      // make an array of circle objects:
+
+      let circleArr;
+
+      function init() {
+        circleArr = [];
+
+        for (let i = 0; i < 600; i++) {
+          let radius = Math.random() * 10 + 1,
+            dx = (Math.random() - 0.5) * 7, //speed in x-direction
+            dy = (Math.random() - 0.5) * 7, //speed in y-direction
+            // x-position of the circle
+            x = Math.random() * (innerWidth - radius * 2) + radius,
+            // y-position of the circle
+            y = Math.random() * (innerHeight - radius * 2) + radius;
+
+          circleArr.push(new Circle(x, y, dx, dy, radius));
+        }
+      }
+      init();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        c.clearRect(0, 0, innerWidth, innerHeight);
+        circleArr.forEach((circle) => circle.update());
+      }
+      animate();
+
+      let myCircle = new Circle();
+    </script>
+  </body>
+</html>

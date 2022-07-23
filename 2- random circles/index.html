@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      canvas {
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+
+    <script>
+      let canvas = document.querySelector("canvas");
+      canvas.width = window.innerWidth;
+      canvas.height = innerHeight;
+
+      let context = canvas.getContext("2d");
+
+      for (let i = 0; i < 5000; i++) {
+        let a = Math.random(),
+          b = Math.random(),
+          c = Math.random();
+
+        let randomColor = `rgb(${Math.floor(a * 255)}, ${Math.floor(b * 255)}, ${Math.floor(
+          c * 255
+        )})`;
+
+        context.beginPath(); //starting the path of the circle
+
+        //arc(x, y, radius, startAngle, endAngle, C.C.W?)
+        context.arc(a * window.innerWidth, b * window.innerHeight, 10, 0, Math.PI * 2, false);
+        context.strokeStyle = randomColor; //giving a color to the arc
+        context.stroke(); // showing the stroked arc
+      }
+    </script>
+  </body>
+</html>

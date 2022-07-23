@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      canvas {
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+
+    <script>
+      let canvas = document.querySelector("canvas");
+      canvas.width = window.innerWidth;
+      canvas.height = innerHeight;
+
+      let context = canvas.getContext("2d");
+
+      // Making rectangles
+
+      context.fillStyle = "red";
+      context.beginPath();
+      context.fillRect(200, 200, 50, 180);
+      context.fillStyle = "green";
+      context.fillRect(400, 400, 80, 80);
+
+      //Making lines:
+
+      // if you don't begin a new path, the next stroke will be applied on the previous one too ( when you call ctx.strok() )
+      context.beginPath();
+
+      context.moveTo(300, 300); //start
+      context.lineTo(100, 500); //end
+      context.strokeStyle = "chocolate";
+      //second line:
+      context.lineTo(600, 600); //starts from the last point drawn
+
+      //making a separate line
+      context.moveTo(30, 30);
+      context.lineTo(80, 60);
+
+      //apply the stroke on the previous drawn shapes so they get rendered on the browser
+      context.stroke();
+
+      //Making arcs
+      context.beginPath();
+      // x,y are the position of the center of the arc
+      context.arc(150, 150, 20, 0, Math.PI * 2, false);
+      context.strokeStyle = "black";
+      context.stroke();
+    </script>
+  </body>
+</html>

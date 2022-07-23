@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+
+    <script>
+      let canvas = document.querySelector('canvas');
+      let c = canvas.getContext('2d');
+
+      document.body.style.overflow = 'hidden';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      function Circle(x, y, dx, dy, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.radius = radius;
+        this.color = color;
+
+        this.draw = function () {
+          c.beginPath();
+          c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+          c.strokeStyle = 'blue'; //this.color;
+          c.stroke();
+          // c.fillStyle = "red";
+          c.fill();
+        };
+
+        //update the direction of the circle when it hits the sides (collision detection)
+        this.update = function () {
+          //change the speed direction when the circle hits right or left border
+          if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
+            this.dx = -this.dx;
+          }
+          //change the speed direction when the circle hits top or bottom border
+          else if (
+            this.y + this.radius > innerHeight ||
+            this.y - this.radius < 0
+          ) {
+            this.dy = -this.dy;
+          }
+
+          //update position
+          this.x += this.dx;
+          this.y += this.dy;
+
+          this.draw();
+        };
+      }
+
+      // make an array of circle objects:
+
+      let circleArr = [];
+
+      for (let i = 0; i < 100; i++) {
+        let radius = 40,
+          dx = (Math.random() - 0.5) * 10, //speed in x-direction
+          dy = (Math.random() - 0.5) * 10, //speed in y-direction
+          //removed diameter from the first x-position so that every circle starts far from the borders by this diameter length. And added a radius to the sum as Math.random() can return 0 and this means we we'll need to move the circle far from the left side
+          x = Math.random() * (innerWidth - radius * 2) + radius, // x-position of the circle
+          //the same calcualtion for the y-position, but in y direction
+          y = Math.random() * (innerHeight - radius * 2) + radius, // y-position of the circle
+          color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+            Math.random() * 255
+          )},${Math.floor(Math.random() * 255)})`;
+
+        circleArr.push(new Circle(x, y, dx, dy, radius, color));
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        //comment the next line and notice the difference :)
+        c.clearRect(0, 0, innerWidth, innerHeight);
+        circleArr.forEach((circle) => circle.update());
+      }
+      animate();
+    </script>
+  </body>
+</html>

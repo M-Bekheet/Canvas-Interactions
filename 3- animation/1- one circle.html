@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    canvas{
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+
+<script>
+
+  let canvas = document.querySelector('canvas');
+  let c = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  c.stokeStyle = 'blue';
+ 
+
+let dx = (Math.random()  - 0.5)*25; //speed in x-direction
+    dy = (Math.random() - 0.5)*25,  //speed in y-direction
+    x = Math.random() * window.innerWidth, // x-position of the circle
+    y = Math.random() * window.innerHeight, // y-position of the circle
+    radius = 40;
+
+function animate(){
+  requestAnimationFrame(animate);
+
+  c.clearRect(0, 0, window.innerWidth, window.innerHeight)
+  c.beginPath();
+  c.arc(x, y, radius, 0, Math.PI*2, false)
+  c.stroke();
+
+  //change the speed direction when the circle hits right or left border
+  if(x + radius > window.innerWidth || x - radius < 0){
+    dx = -dx;
+  }
+  //change the speed direction when the circle hits top or bottom border
+  if(y + radius > window.innerHeight || y - radius < 0){
+    dy = -dy;
+  }
+
+  x += dx;
+  y += dy;
+
+
+} animate();
+
+</script>
+</body>
+</html>
