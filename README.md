@@ -1,6 +1,6 @@
 # HTML5 Canvas Interaction
 
-Interaction to include
+What's included
 
 - Draw line, rectangle, and circle
 - Draw random circles
